@@ -24,21 +24,22 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://the-golf-draw.vercel.app",
   "https://the-golf-draw-git-main-abhimanyukumars-projects.vercel.app",
-  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app"
+  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app",
+  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app/"
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin + "/") || origin.includes(".vercel.app")) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   }),
 );
 app.use(express.json());
