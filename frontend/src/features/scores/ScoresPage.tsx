@@ -64,13 +64,16 @@ export default function ScoresPage() {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="space-y-6"
+      className="relative space-y-6"
     >
+      {/* Premium Material Background */}
+      <div className="material-bg" style={{ backgroundImage: 'url(/assets/bg-scores.png)' }} />
+
       <SectionHeading eyebrow="Score management" title="Track your last five scores" description="Values must stay between 1 and 45 and only one score can exist per date." />
       
       <div className="grid gap-6 xl:grid-cols-[400px_1fr]">
         {/* ADD SCORE CARD */}
-        <Card className="h-fit space-y-6 p-5 md:p-6">
+        <Card className="material-card h-fit space-y-6 p-5 md:p-6">
           <div className="flex items-center gap-3">
             <div className="grid h-10 w-10 place-items-center rounded-2xl border border-white/8 bg-white/5 text-emerald">
               <PlusCircle size={20} />
@@ -122,7 +125,7 @@ export default function ScoresPage() {
         </Card>
 
         {/* RECENT SCORES CARD */}
-        <Card className="space-y-6 p-5 md:p-6">
+        <Card className="material-card space-y-6 p-5 md:p-6">
           <div className="flex flex-col gap-4 border-b border-white/8 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-2xl border border-white/8 bg-white/5 text-gold">
