@@ -1,8 +1,20 @@
 import axios from 'axios';
 import { useAuthStore } from '@/lib/auth-store';
 
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL;
+  
+  // Dynamic detection for Vercel environments
+  const hostname = window.location.hostname;
+  if (hostname.includes('vercel.app')) {
+    return 'https://the-golf-draw-z71c.vercel.app';
+  }
+  
+  return 'http://localhost:5002';
+};
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002',
+  baseURL: getBaseUrl(),
   withCredentials: true,
 });
 
