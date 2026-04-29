@@ -5,20 +5,21 @@ import * as schema from "./schema.js";
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
+  console.error("CRITICAL: DATABASE_URL is not set. Database features will fail.");
 }
 
-const client = postgres(connectionString, {
+const client = connectionString ? postgres(connectionString, {
   prepare: false, // needed for Supabase pooler
-});
+}) : null;
 
 export const db = drizzle(client, { schema });
 
 export async function checkDB() {
+  if (!client) return;
   await client`select 1`;
   console.log("DB connected");
 }
 
 export async function closeDB() {
-  await client.end();
+  if (client) await client.end();
 }

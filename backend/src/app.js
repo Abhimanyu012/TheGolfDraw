@@ -20,9 +20,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://the-golf-draw.vercel.app",
+  "https://the-golf-draw-git-main-abhimanyukumars-projects.vercel.app",
+  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app",
+  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app/"
+];
+
 app.use(
   cors({
-    origin: true, // This will reflect the request origin back, allowing anything
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin + "/") || origin.includes(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
@@ -31,7 +45,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
+
+// Static files handling for Vercel
+const uploadsPath = path.resolve(__dirname, "../uploads");
+app.use("/uploads", express.static(uploadsPath));
 
 // Routes
 app.use("/api/auth", authRoutes);
