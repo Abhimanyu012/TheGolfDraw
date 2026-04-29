@@ -48,9 +48,9 @@ export default function LoginPage() {
         return message;
       }
       if (!error.response) {
-        return 'Cannot connect to backend. Make sure backend is running on port 5002.';
+        return 'Network error: Unable to connect to our services. Please check your internet connection.';
       }
-      return `Request failed (${error.response.status}). Please try again.`;
+      return `Connection issue: Request could not be completed (${error.response.status}).`;
     }
     return fallback;
   };
@@ -114,8 +114,13 @@ export default function LoginPage() {
             <FloatingInput id="login-email" type="email" label="Email" className="text-text" {...form.register('email')} />
             {form.formState.errors.email ? <p className="mt-2 text-xs text-danger">{form.formState.errors.email.message}</p> : null}
           </div>
-          <div>
+          <div className="space-y-2">
             <FloatingInput id="login-password" type="password" label="Password" className="text-text" {...form.register('password')} />
+            <div className="flex justify-end px-1">
+              <NavLink to="/forgot-password" className="text-[11px] font-bold uppercase tracking-wider text-muted transition-colors hover:text-emerald">
+                Forgot password?
+              </NavLink>
+            </div>
             {form.formState.errors.password ? <p className="mt-2 text-xs text-danger">{form.formState.errors.password.message}</p> : null}
           </div>
           <Button className="w-full" busy={busy} type="submit">

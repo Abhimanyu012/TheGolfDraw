@@ -32,10 +32,10 @@ export default function CharitiesPage() {
   const featured = useMemo(() => charities.find((charity) => charity.isFeatured) ?? charities[0], [charities]);
 
   return (
-    <motion.div 
+    <motion.div
       key={isLoading ? 'loading' : 'loaded'}
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="page-shell py-16"
     >
@@ -127,3 +127,4 @@ export default function CharitiesPage() {
     </motion.div>
   );
 }
+

@@ -9,11 +9,11 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { GolfMotionBackground } from '@/features/home/GolfMotionBackground';
 import { useSession } from '@/app/providers';
 
-const heroBg = 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?w=1920&q=80';
-const charityBg = 'https://source.unsplash.com/1920x1080/?charity,community,children';
-const winnersBg = 'https://source.unsplash.com/1920x1080/?golf,trophy,celebration';
-const textureBg = 'https://source.unsplash.com/1920x1080/?golf,night,stadium';
-const subscriptionBg = 'https://source.unsplash.com/1920x1080/?golf,clubhouse,membership';
+const heroBg = 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=1920&q=80'; // Moody dusk landscape
+const charityBg = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&q=80'; // Ethical community impact
+const winnersBg = 'https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?w=1920&q=80'; // Abstract gold achievement
+const textureBg = 'https://images.unsplash.com/photo-1550747540-3dffba27252f?w=1920&q=80'; // Deep green macro texture
+const subscriptionBg = 'https://images.unsplash.com/photo-1518005020251-582c789765c7?w=1920&q=80'; // Minimalist luxury architecture
 
 const steps = [
   { id: '01', title: 'Subscribe', body: 'Choose a plan and activate your The Golf Draw membership instantly.', icon: Crown },
@@ -22,9 +22,9 @@ const steps = [
 ];
 
 const charities = [
-  { name: 'UNICEF', raised: '£824,300', progress: 72, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=80' },
-  { name: 'WWF', raised: '£610,450', progress: 61, image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=900&q=80' },
-  { name: 'British Red Cross', raised: '£965,920', progress: 79, image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900&q=80' },
+  { name: 'CRY India', raised: '₹82,43,000', progress: 72, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=80' },
+  { name: 'Goonj', raised: '₹61,04,500', progress: 61, image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=900&q=80' },
+  { name: 'Isha Vidhya', raised: '₹96,59,200', progress: 79, image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900&q=80' },
 ];
 
 const charityImageFallback = 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900&q=80';
@@ -187,9 +187,9 @@ export default function LandingPage() {
           <div className="hero-light-beam mt-14" />
 
           <Card className="relative mt-12 grid gap-6 border-white/10 bg-black/35 p-6 backdrop-blur-xl sm:grid-cols-3">
-            <AnimatedStat value={2400000} prefix="£" label="Raised" />
+            <AnimatedStat value={24000000} prefix="₹" label="Raised" />
             <AnimatedStat value={12400} prefix="" label="Members" />
-            <AnimatedStat value={180000} prefix="£" label="Prize Pool" />
+            <AnimatedStat value={1800000} prefix="₹" label="Prize Pool" />
           </Card>
         </div>
       </section>
@@ -243,7 +243,7 @@ export default function LandingPage() {
                 <span className="jackpot-label">Monthly Sweepstakes</span>
               </div>
               <motion.div variants={jackpotVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-                <h2 className="mt-4 jackpot-amount">£45,200</h2>
+                <h2 className="mt-4 jackpot-amount">₹4,52,000</h2>
               </motion.div>
               <p className="section-desc mt-6">
                 Active members are automatically entered into our tiered prize structure, including the Jackpot, 4-Match, and 3-Match pools.
@@ -264,7 +264,7 @@ export default function LandingPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="jackpot-label">4-Match Tier</div>
-                    <div className="mt-2 tier-amount">£15,800</div>
+                    <div className="mt-2 tier-amount">₹1,58,000</div>
                   </div>
                   <div className="rounded-full bg-white/5 p-2 transition-colors group-hover:bg-gold/10 group-hover:text-gold">
                     <ChevronRight size={20} />
@@ -275,7 +275,7 @@ export default function LandingPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="jackpot-label">3-Match Tier</div>
-                    <div className="mt-2 tier-amount">£9,400</div>
+                    <div className="mt-2 tier-amount">₹94,000</div>
                   </div>
                   <div className="rounded-full bg-white/5 p-2 transition-colors group-hover:bg-gold/10 group-hover:text-gold">
                     <ChevronRight size={20} />
@@ -316,7 +316,7 @@ export default function LandingPage() {
                   <div className="text-[10px] uppercase tracking-[0.2em] text-muted">Audited</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="font-data text-3xl font-bold">£2.4M</div>
+                  <div className="font-data text-3xl font-bold">₹2.4Cr</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-muted">Donated</div>
                 </div>
               </div>
@@ -378,8 +378,8 @@ export default function LandingPage() {
               <div>
                 <h3 className="plan-name">Monthly Access</h3>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="plan-currency">£</span>
-                  <span className="plan-price">9.99</span>
+                  <span className="plan-currency">₹</span>
+                  <span className="plan-price">199</span>
                   <span className="plan-period">/mo</span>
                 </div>
               </div>
@@ -402,8 +402,8 @@ export default function LandingPage() {
               <div>
                 <h3 className="plan-name text-emerald">Annual Platinum</h3>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="plan-currency">£</span>
-                  <span className="plan-price">89.99</span>
+                  <span className="plan-currency">₹</span>
+                  <span className="plan-price">1,999</span>
                   <span className="plan-period">/yr</span>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { db } from "../db/db.js";
 import { charities, donations, draws, scores, subscriptions, users, winners } from "../db/schema.js";
 import { ApiError, asyncHandler } from "../utils/http.js";
 import { sendBulkEmail } from "../utils/email.js";
+import { broadcastTemplate } from "../utils/templates.js";
 
 export const listUsers = asyncHandler(async (req, res) => {
   const q = req.query.q?.toString().trim();
@@ -202,7 +203,12 @@ export const broadcastSystemUpdate = asyncHandler(async (req, res) => {
     htmlBuilder: (to) => {
       const person = userList.find((u) => u.email === to);
       const name = person?.fullName || "Subscriber";
-      return `<p>Hello ${name},</p><p>${message}</p><p>- Digital Heroes Team</p>`;
+      return broadcastTemplate({
+        fullName: name,
+        subject,
+        message,
+        actionUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/dashboard`
+      });
     },
   });
 

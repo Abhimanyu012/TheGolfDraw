@@ -17,9 +17,6 @@ import { errorHandler, notFoundHandler } from "./src/middlewares/error.middlewar
 
 const app = express();
 
-// Emergency Health Check for Vercel Debugging
-app.get("/api/ping", (req, res) => res.status(200).json({ status: "alive", time: new Date().toISOString() }));
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -35,6 +32,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+// Emergency Health Check for Vercel Debugging
+app.get("/api/ping", (req, res) => res.status(200).json({ status: "alive", time: new Date().toISOString() }));
 
 // Static files handling for Vercel
 const uploadsPath = path.resolve(__dirname, "uploads");

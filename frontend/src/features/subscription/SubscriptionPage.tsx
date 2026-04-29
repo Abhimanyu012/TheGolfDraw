@@ -28,7 +28,7 @@ const plans = [
   {
     id: 'MONTHLY' as const,
     name: 'Monthly',
-    priceCents: 1999,
+    priceCents: 19900,
     period: '/mo',
     badge: 'Flexible Entry',
     badgeIcon: Crown,
@@ -47,9 +47,9 @@ const plans = [
   {
     id: 'YEARLY' as const,
     name: 'Yearly',
-    priceCents: 19999,
+    priceCents: 199900,
     period: '/yr',
-    badge: 'Best Value — Save 17%',
+    badge: 'Best Value — Save ₹389/mo',
     badgeIcon: BadgeCheck,
     accentClass: 'text-gold',
     borderClass: 'border-gold/30',
@@ -265,8 +265,8 @@ export default function SubscriptionPage() {
                     <div className="mt-1 text-sm text-muted">{plan.blurb}</div>
                   </div>
                   <div className="flex items-baseline gap-1 pt-4 text-right">
-                    <span className="text-sm text-muted">£</span>
-                    <span className="font-display text-4xl font-bold text-text">{(plan.priceCents / 100).toFixed(2)}</span>
+                    <span className="text-sm text-muted">₹</span>
+                    <span className="font-display text-4xl font-bold text-text">{(plan.priceCents / 100).toLocaleString('en-IN')}</span>
                     <span className="text-sm text-muted">{plan.period}</span>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ export default function SubscriptionPage() {
                     busy={busyPlan === plan.id}
                     onClick={() => void startCheckout(plan.id)}
                   >
-                    {isActive ? `Switch to ${plan.name}` : `Subscribe — £${(plan.priceCents / 100).toFixed(2)}${plan.period}`}
+                    {isActive ? `Switch to ${plan.name}` : `Subscribe — ₹${(plan.priceCents / 100).toLocaleString('en-IN')}${plan.period}`}
                   </Button>
                 )}
               </Card>

@@ -21,6 +21,8 @@ export const router = createBrowserRouter([
       { path: '/pricing', ...lazy(() => import('@/features/auth/PricingPage')) },
       { path: '/login', ...lazy(() => import('@/features/auth/LoginPage')) },
       { path: '/signup', ...lazy(() => import('@/features/auth/SignupPage')) },
+      { path: '/forgot-password', ...lazy(() => import('@/features/auth/ForgotPasswordPage')) },
+      { path: '/reset-password', ...lazy(() => import('@/features/auth/ResetPasswordPage')) },
     ],
   },
   {
@@ -34,6 +36,7 @@ export const router = createBrowserRouter([
           { path: '/scores', ...lazy(() => import('@/features/scores/ScoresPage')) },
           { path: '/draws', ...lazy(() => import('@/features/draws/DrawsPage')) },
           { path: '/winnings', ...lazy(() => import('@/features/winners/WinningsPage')) },
+          { path: '/profile', ...lazy(() => import('@/features/profile/ProfilePage')) },
         ],
       },
     ],

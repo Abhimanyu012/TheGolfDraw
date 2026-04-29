@@ -3,6 +3,8 @@ import { db } from "../db/db.js";
 import { draws, users, winners } from "../db/schema.js";
 import { ApiError, asyncHandler } from "../utils/http.js";
 import { sendEmail } from "../utils/email.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { winnerReviewTemplate } from "../utils/templates.js";
 
 export const listMyWinnings = asyncHandler(async (req, res) => {
   const winningsList = await db
@@ -26,18 +28,8 @@ export const listMyWinnings = asyncHandler(async (req, res) => {
 
 export const uploadWinnerProof = asyncHandler(async (req, res) => {
   const { winnerId } = req.params;
-  const { proofUrl } = req.body;
 
-  const uploadedProofUrl = req.file
-    ? `${req.protocol}://${req.get("host")}/uploads/proofs/${req.file.filename}`
-    : null;
-
-  const finalProofUrl = uploadedProofUrl || proofUrl;
-
-  if (!finalProofUrl) {
-    throw new ApiError(400, "Upload a file or provide proofUrl");
-  }
-
+  // Verify the winner record belongs to this user before accepting upload
   const [winner] = await db
     .select()
     .from(winners)
@@ -46,6 +38,25 @@ export const uploadWinnerProof = asyncHandler(async (req, res) => {
 
   if (!winner) {
     throw new ApiError(404, "Winner record not found");
+  }
+
+  let finalProofUrl = null;
+
+  if (req.file) {
+    // Upload the in-memory buffer directly to Cloudinary
+    const { url } = await uploadToCloudinary(
+      req.file.buffer,
+      req.file.originalname,
+      "golf-draw/proofs"
+    );
+    finalProofUrl = url;
+  } else if (req.body.proofUrl) {
+    // Allow passing a direct URL as a fallback (admin tooling)
+    finalProofUrl = req.body.proofUrl;
+  }
+
+  if (!finalProofUrl) {
+    throw new ApiError(400, "A file upload is required to submit proof");
   }
 
   const [updated] = await db
@@ -130,11 +141,20 @@ export const reviewWinner = asyncHandler(async (req, res) => {
     .where(eq(draws.id, updated.drawId))
     .limit(1);
 
-  await sendEmail({
+  // Fire-and-forget — don't block the HTTP response on email delivery
+  sendEmail({
     to: userData.email,
-    subject: "Winner verification update",
-    html: `<p>Hello ${userData.fullName},</p><p>Your winner record for draw ${drawData.month}/${drawData.year} was marked as ${updated.verificationStatus}. Payout status: ${updated.payoutStatus}.</p>`,
-  });
+    subject: "Prize Status Updated — The Golf Draw",
+    html: winnerReviewTemplate({
+      fullName: userData.fullName,
+      month: new Date(0, drawData.month - 1).toLocaleString('default', { month: 'long' }),
+      year: drawData.year,
+      status: updated.verificationStatus,
+      payoutStatus: updated.payoutStatus,
+      amount: (updated.amountCents / 100).toLocaleString('en-IN'),
+      dashboardUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/winnings`
+    }),
+  }).catch((err) => console.error("Winner review email error:", err));
 
   res.json({ success: true, winner: updated });
 });

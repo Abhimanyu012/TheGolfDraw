@@ -54,6 +54,8 @@ export const users = pgTable(
     role: userRoleEnum("role").notNull().default("user"),
     selectedCharityId: text("selected_charity_id").references(() => charities.id, { onDelete: "set null" }),
     charityContributionPercentage: integer("charity_contribution_percent").notNull().default(10),
+    resetToken: text("reset_token"),
+    resetTokenExpires: timestamp("reset_token_expires", { mode: "date" }),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
   },

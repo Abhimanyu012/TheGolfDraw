@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Crown, HandCoins, ShieldCheck, UserPlus } from 'lucide-react';
+import { Crown, HandCoins, ShieldCheck, UserPlus, Heart } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/lib/auth-store';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { FloatingInput } from '@/components/ui/floating-input';
-import { Select } from '@/components/ui/select';
+import { CustomDropdown } from '@/components/ui/select';
 import { charityApi } from '@/lib/requests';
 
 const schema = z.object({
@@ -63,9 +63,9 @@ export default function SignupPage() {
         return message;
       }
       if (!error.response) {
-        return 'Cannot connect to backend. Make sure backend is running on port 5002.';
+        return 'Network error: Unable to connect to our services. Please check your internet connection.';
       }
-      return `Request failed (${error.response.status}). Please try again.`;
+      return `Connection issue: Request could not be completed (${error.response.status}).`;
     }
     return fallback;
   };
@@ -177,8 +177,8 @@ export default function SignupPage() {
         {backendStatus !== 'up' ? (
           <div className="rounded-xl border border-danger/40 bg-danger/10 px-3 py-2 text-xs text-danger">
             {backendStatus === 'checking'
-              ? 'Checking backend connection...'
-              : 'Backend is not reachable at http://localhost:5002. Start backend and refresh this page.'}
+              ? 'Verifying system connectivity...'
+              : 'Our services are currently undergoing maintenance. Please try again in a few moments.'}
           </div>
         ) : null}
 
@@ -214,13 +214,22 @@ export default function SignupPage() {
             </div>
             {form.formState.errors.password ? <p className="mt-2 text-xs text-danger">{form.formState.errors.password.message}</p> : null}
           </div>
-          <div>
-            <Select className="text-text" {...form.register('charityId')}>
-              <option value="">Select charity</option>
-              {charities.map((charity) => (
-                <option key={charity.id} value={charity.id}>{charity.name}</option>
-              ))}
-            </Select>
+          <div className="md:col-span-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted mb-2 block ml-1">Charity Partner</label>
+            <CustomDropdown
+              value={form.watch('charityId')}
+              onChange={(val) => form.setValue('charityId', val, { shouldValidate: true })}
+              placeholder="Select your charity"
+              options={[
+                { value: '', label: 'Select your charity', description: 'Choose who you\'re supporting' },
+                ...charities.map((charity: any) => ({
+                  value: charity.id,
+                  label: charity.name,
+                  description: charity.isFeatured ? 'Featured charity' : 'Active charity',
+                  icon: Heart,
+                }))
+              ]}
+            />
             {charityLoadError ? <p className="mt-2 text-xs text-danger">{charityLoadError}</p> : null}
             {form.formState.errors.charityId ? <p className="mt-2 text-xs text-danger">{form.formState.errors.charityId.message}</p> : null}
           </div>

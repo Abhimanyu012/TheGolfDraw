@@ -11,7 +11,7 @@ import { requireActiveSubscription } from "../middlewares/subscription.middlewar
 const router = Router();
 
 router.use(requireAuth);
-// router.use(requireActiveSubscription); - Removed to allow all auth users to manage scores
+router.use(requireActiveSubscription);
 router.get("/", listMyScores);
 router.post("/", addScore);
 router.patch("/:id", updateScore);

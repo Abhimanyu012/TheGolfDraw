@@ -5,14 +5,15 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { Edit3, PlusCircle, Target, Trash2 } from 'lucide-react';
+import { Edit3, PlusCircle, ShieldCheck, Target, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { SectionHeading } from '@/components/ui/section-heading';
-import { scoreApi } from '@/lib/requests';
+import { scoreApi, subscriptionApi } from '@/lib/requests';
 import { shortDate } from '@/lib/format';
 import { queryClient } from '@/app/queryClient';
+import { useNavigate } from 'react-router-dom';
 import { SkeletonListItems } from '@/components/ui/skeleton';
 import { cn } from '@/lib/cn';
 
@@ -21,9 +22,17 @@ const schema = z.object({ value: z.coerce.number().int().min(1).max(45), date: z
 type FormValues = z.infer<typeof schema>;
 
 export default function ScoresPage() {
+  const navigate = useNavigate();
   const [editing, setEditing] = useState<{ id: string; value: number } | null>(null);
+  
   const { data, isLoading } = useQuery({ queryKey: ['scores'], queryFn: scoreApi.list });
+  const { data: subData, isLoading: isSubLoading } = useQuery({ 
+    queryKey: ['subscriptions', 'me'], 
+    queryFn: subscriptionApi.me 
+  });
+
   const scores = data?.scores ?? [];
+  const isActive = subData?.subscription?.status === 'ACTIVE';
 
   const createMutation = useMutation({
     mutationFn: scoreApi.create,
@@ -70,57 +79,76 @@ export default function ScoresPage() {
       <SectionHeading eyebrow="Score management" title="Track your last five scores" description="Values must stay between 1 and 45 and only one score can exist per date." />
       
       <div className="grid gap-6 xl:grid-cols-[400px_1fr]">
-        {/* ADD SCORE CARD */}
-        <Card className="material-card h-fit space-y-6 p-5 md:p-6">
-          <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-2xl border border-white/8 bg-white/5 text-emerald">
-              <PlusCircle size={20} />
+        {/* ADD SCORE CARD / GATING */}
+        {!isActive && !isSubLoading ? (
+          <Card className="material-card h-fit space-y-6 p-5 md:p-8 border-gold/30 bg-gradient-to-b from-[#1a1720] to-[#12121a]">
+            <div className="space-y-4 text-center">
+              <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-gold/25 bg-gold/10 text-gold">
+                <ShieldCheck size={32} />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-display text-2xl font-bold">Subscription Required</h3>
+                <p className="text-sm text-muted leading-relaxed px-4">
+                  You need an active membership to track scores and participate in monthly draws.
+                </p>
+              </div>
+              <Button className="w-full h-12 rounded-2xl" onClick={() => navigate('/subscription')}>
+                View Plans
+              </Button>
             </div>
-            <div>
-              <h3 className="font-display text-xl font-bold">Add new score</h3>
-              <p className="text-xs text-muted">Enter your daily total</p>
+          </Card>
+        ) : (
+          <Card className="material-card h-fit space-y-6 p-5 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl border border-white/8 bg-white/5 text-emerald">
+                <PlusCircle size={20} />
+              </div>
+              <div>
+                <h3 className="font-display text-xl font-bold">Add new score</h3>
+                <p className="text-xs text-muted">Enter your daily total</p>
+              </div>
             </div>
-          </div>
-          
-          <form className="space-y-5" onSubmit={onSubmit}>
-            <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted">Date of play</label>
-              <Input 
-                type="date" 
-                className={cn(
-                  "text-white h-11 md:h-12",
-                  form.formState.errors.date && "border-danger focus-visible:ring-danger/20"
+            
+            <form className="space-y-5" onSubmit={onSubmit}>
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted">Date of play</label>
+                <Input 
+                  type="date" 
+                  className={cn(
+                    "text-white h-11 md:h-12",
+                    form.formState.errors.date && "border-danger focus-visible:ring-danger/20"
+                  )}
+                  {...form.register('date')} 
+                />
+                {form.formState.errors.date && (
+                  <p className="text-xs font-medium text-danger">{form.formState.errors.date.message}</p>
                 )}
-                {...form.register('date')} 
-              />
-              {form.formState.errors.date && (
-                <p className="text-xs font-medium text-danger">{form.formState.errors.date.message}</p>
-              )}
-            </div>
+              </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted">Stableford score (1-45)</label>
-              <Input 
-                type="number" 
-                min={1} 
-                max={45} 
-                placeholder="Enter score" 
-                className={cn(
-                  "text-white h-11 md:h-12",
-                  form.formState.errors.value && "border-danger focus-visible:ring-danger/20"
+              <div className="space-y-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted">Stableford score (1-45)</label>
+                <Input 
+                  type="number" 
+                  min={1} 
+                  max={45} 
+                  placeholder="Enter score" 
+                  className={cn(
+                    "text-white h-11 md:h-12",
+                    form.formState.errors.value && "border-danger focus-visible:ring-danger/20"
+                  )}
+                  {...form.register('value')} 
+                />
+                {form.formState.errors.value && (
+                  <p className="text-xs font-medium text-danger">{form.formState.errors.value.message}</p>
                 )}
-                {...form.register('value')} 
-              />
-              {form.formState.errors.value && (
-                <p className="text-xs font-medium text-danger">{form.formState.errors.value.message}</p>
-              )}
-            </div>
+              </div>
 
-            <Button className="w-full py-3 md:py-3.5" busy={createMutation.isPending} type="submit">
-              Save score
-            </Button>
-          </form>
-        </Card>
+              <Button className="w-full py-3 md:py-3.5" busy={createMutation.isPending} type="submit">
+                Save score
+              </Button>
+            </form>
+          </Card>
+        )}
 
         {/* RECENT SCORES CARD */}
         <Card className="material-card space-y-6 p-5 md:p-6">

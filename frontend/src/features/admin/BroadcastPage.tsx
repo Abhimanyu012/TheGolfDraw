@@ -31,11 +31,11 @@ export default function BroadcastPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="space-y-6"
     >
-      <SectionHeading eyebrow="Broadcast" title="Send a system message to all users" />
+      <SectionHeading eyebrow="Broadcast" title="Broadcast to Members" description="Send a system-wide message to all active subscribers via email." />
       <Card className="space-y-4">
         <Input placeholder="Subject" value={subject} onChange={(event) => setSubject(event.target.value)} />
         <Textarea placeholder="Message" value={message} onChange={(event) => setMessage(event.target.value)} />
-        <Button busy={broadcast.isPending} onClick={() => broadcast.mutate()}><Send size={14} /> Send broadcast</Button>
+        <Button busy={broadcast.isPending} onClick={() => broadcast.mutate()}><Send size={14} /> Send</Button>
       </Card>
     </motion.div>
   );

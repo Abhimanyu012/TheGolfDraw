@@ -2,15 +2,17 @@ import crypto from "crypto";
 import { randomUUID } from "crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db/db.js";
-import { charities, donations, subscriptions } from "../db/schema.js";
+import { charities, donations, subscriptions, users } from "../db/schema.js";
 import { PLAN_PRICES_CENTS } from "../utils/constants.js";
 import { ApiError, asyncHandler } from "../utils/http.js";
+import { sendEmail } from "../utils/email.js";
 import {
   createRazorpayOrder,
   fetchRazorpayOrder,
   fetchRazorpayPayment,
   getRazorpayPublicKey,
 } from "../services/razorpay.service.js";
+import { subscriptionTemplate } from "../utils/templates.js";
 
 const addMonths = (date, months) => {
   const next = new Date(date);
@@ -32,7 +34,28 @@ const verifySignature = ({ orderId, paymentId, signature }) => {
   return expected === signature;
 };
 
-const findCharityForSubscriptionDonation = async () => {
+/**
+ * Fetches the user's selected charity + contribution %, with a
+ * featured-charity fallback if the user hasn't selected one yet.
+ */
+const getUserCharityPreferences = async (userId) => {
+  const [userData] = await db
+    .select({
+      selectedCharityId: users.selectedCharityId,
+      charityContributionPercentage: users.charityContributionPercentage,
+    })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (userData?.selectedCharityId) {
+    return {
+      charityId: userData.selectedCharityId,
+      contributionPercent: userData.charityContributionPercentage ?? 10,
+    };
+  }
+
+  // Fallback: use the featured active charity
   const [featured] = await db
     .select({ id: charities.id })
     .from(charities)
@@ -40,7 +63,7 @@ const findCharityForSubscriptionDonation = async () => {
     .orderBy(desc(charities.isFeatured), desc(charities.createdAt))
     .limit(1);
 
-  return featured ?? null;
+  return featured ? { charityId: featured.id, contributionPercent: 10 } : null;
 };
 
 export const createSubscriptionOrder = asyncHandler(async (req, res) => {
@@ -156,17 +179,30 @@ export const verifySubscriptionPayment = asyncHandler(async (req, res) => {
     })
     .returning();
 
-  const charity = await findCharityForSubscriptionDonation();
-  if (charity) {
-    const donationAmountCents = Math.floor(expectedAmount * 0.1);
+  const charityPrefs = await getUserCharityPreferences(req.user.id);
+  if (charityPrefs) {
+    const donationAmountCents = Math.floor(expectedAmount * (charityPrefs.contributionPercent / 100));
     await db.insert(donations).values({
       id: randomUUID(),
       userId: req.user.id,
-      charityId: charity.id,
+      charityId: charityPrefs.charityId,
       amountCents: donationAmountCents,
       source: "SUBSCRIPTION",
     });
   }
+
+  // Send subscription confirmation email
+  sendEmail({
+    to: req.user.email,
+    subject: "Membership Activated — The Golf Draw",
+    html: subscriptionTemplate({
+      fullName: req.user.fullName,
+      plan,
+      amount: (expectedAmount / 100).toLocaleString('en-IN'),
+      renewsAt: renewsAt.toLocaleDateString(),
+      dashboardUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/dashboard`
+    }),
+  }).catch((err) => console.error("Subscription email error:", err));
 
   res.json({
     success: true,

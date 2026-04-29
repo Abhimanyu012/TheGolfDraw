@@ -109,6 +109,16 @@ export const getAdminDashboard = asyncHandler(async (req, res) => {
     return acc;
   }, []);
 
+  const charityTotals = await db
+    .select({
+      charityId: donations.charityId,
+      charityName: charities.name,
+      totalCents: sum(donations.amountCents),
+    })
+    .from(donations)
+    .innerJoin(charities, eq(donations.charityId, charities.id))
+    .groupBy(donations.charityId, charities.name);
+
   res.json({
     success: true,
     dashboard: {
@@ -116,7 +126,10 @@ export const getAdminDashboard = asyncHandler(async (req, res) => {
       activeSubscribers: Number(activeSubsResult?.count || 0),
       totalPrizePoolCents: Number(poolResult?.total || 0),
       totalPaidOutCents: Number(paidResult?.total || 0),
-      charityContributionTotals: [],
+      charityContributionTotals: charityTotals.map(t => ({
+        name: t.charityName,
+        totalCents: Number(t.totalCents || 0)
+      })),
       drawStats,
     },
   });

@@ -5,6 +5,7 @@ import { draws, subscriptions, users, winners } from "../db/schema.js";
 import { ApiError, asyncHandler } from "../utils/http.js";
 import { sendBulkEmail } from "../utils/email.js";
 import { getMonthYear, runDrawEngine } from "../services/draw.service.js";
+import { drawResultsTemplate, winnerNotificationTemplate } from "../utils/templates.js";
 
 export const simulateDraw = asyncHandler(async (req, res) => {
   const { logic = "RANDOM" } = req.body;
@@ -110,24 +111,39 @@ export const publishDraw = asyncHandler(async (req, res) => {
   // Fire-and-forget email notifications to prevent blocking the HTTP response
   Promise.resolve().then(async () => {
     try {
+      // Notify all active subscribers that results are published
       await sendBulkEmail({
-        recipients: activeUsers.map((x) => x.user.email),
-        subject: `Draw Results Published (${period.month}/${period.year})`,
+        recipients: activeUsers.map((x) => x?.email).filter(Boolean),
+        subject: `Draw Results — ${new Date(period.year, period.month - 1).toLocaleString('default', { month: 'long' })} ${period.year}`,
         htmlBuilder: (to) => {
-          const user = activeUsers.find((x) => x.user.email === to)?.user;
-          return `<p>Hello ${user?.fullName || "Subscriber"},</p><p>The draw results for ${period.month}/${period.year} are now published. Winning numbers: ${result.numbers.join(", ")}.</p>`;
+          const user = activeUsers.find((x) => x?.email === to);
+          return drawResultsTemplate({
+            fullName: user?.fullName || "Subscriber",
+            month: new Date(period.year, period.month - 1).toLocaleString('default', { month: 'long' }),
+            year: period.year,
+            winningNumbers: result.numbers,
+            dashboardUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/dashboard`
+          });
         },
       });
 
+      // Notify winners specifically
       const winnerRecipients = drawWinners
         .map((w) => w.users?.email)
         .filter(Boolean);
       await sendBulkEmail({
         recipients: winnerRecipients,
-        subject: "You have a winner status in this month draw",
+        subject: "🏆 You're a winner in this month's draw!",
         htmlBuilder: (to) => {
           const winner = drawWinners.find((w) => w.users?.email === to);
-          return `<p>Congratulations ${winner?.users?.fullName || "Winner"},</p><p>You matched ${winner?.winners?.matchCount} numbers and your provisional payout is ₹${((winner?.winners?.amountCents || 0) / 100).toFixed(2)}. Please upload proof from your dashboard.</p>`;
+          return winnerNotificationTemplate({
+            fullName: winner?.users?.fullName || "Winner",
+            month: new Date(period.year, period.month - 1).toLocaleString('default', { month: 'long' }),
+            year: period.year,
+            matchCount: winner?.winners?.matchCount,
+            amount: ((winner?.winners?.amountCents || 0) / 100).toLocaleString('en-IN'),
+            uploadUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/winnings`
+          });
         },
       });
     } catch (emailErr) {

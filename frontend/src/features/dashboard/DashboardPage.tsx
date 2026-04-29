@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Activity, Gift, HeartHandshake, ShieldCheck, TrendingUp, Wallet, Save } from 'lucide-react';
+import { Activity, Gift, HeartHandshake, ShieldCheck, TrendingUp, Wallet, Save, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { StatCard } from '@/components/ui/stat-card';
-import { Select } from '@/components/ui/select';
+import { CustomDropdown } from '@/components/ui/select';
 import { SkeletonPageShell } from '@/components/ui/skeleton';
 import { authApi, charityApi, dashboardApi } from '@/lib/requests';
 import { money, shortDate } from '@/lib/format';
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       className="space-y-6"
     >
 
-      <SectionHeading eyebrow="Subscriber dashboard" title="Your membership, rewards, and giving in one place." description="Track subscription status, score history, draw eligibility, prize wins, and charity contribution with a calm SaaS layout." />
+      <SectionHeading eyebrow="Subscriber dashboard" title="Everything in one place." description="Your membership status, scores, draw eligibility, winnings, and charity impact — updated in real time." />
 
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard label="Subscription" value={subscriptionStatus} hint={dashboard.subscription ? dashboard.subscription.plan : 'Not activated'} />
@@ -193,12 +193,21 @@ export default function DashboardPage() {
             )}
           </div>
           <div className="rounded-3xl border border-white/8 bg-white/4 p-4">
-            <Select value={selectedCharityId} onChange={(e) => setSelectedCharityId(e.target.value)} className="mb-4 bg-black/20">
-              <option value="">Select a charity</option>
-              {charities.map((c: any) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </Select>
+            <CustomDropdown
+              value={selectedCharityId}
+              onChange={(val) => setSelectedCharityId(val)}
+              placeholder="Select a charity"
+              options={[
+                { value: '', label: 'Select a charity', description: 'Choose your beneficiary' },
+                ...charities.map((c: any) => ({
+                  value: c.id,
+                  label: c.name,
+                  description: c.isFeatured ? 'Featured charity' : undefined,
+                  icon: Heart,
+                }))
+              ]}
+              className="mb-4"
+            />
             <div className="flex items-center justify-between text-sm text-muted">
               <span>Contribution Share</span>
               <span>{contributionPreview}%</span>

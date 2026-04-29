@@ -20,6 +20,8 @@ export const authApi = {
   me: async () => unwrap<{ user: unknown }>(await api.get('/api/auth/me')),
   updatePreferences: async (payload: { charityId?: string; charityContributionPercent?: number }) =>
     unwrap<{ user: unknown }>(await api.patch('/api/auth/preferences', payload)),
+  forgotPassword: async (payload: { email: string }) => unwrap<{ message: string }>(await api.post('/api/auth/forgot-password', payload)),
+  resetPassword: async (payload: { token: string; password: string }) => unwrap<{ message: string }>(await api.post('/api/auth/reset-password', payload)),
 };
 
 export const charityApi = {
@@ -83,4 +85,8 @@ export const adminApi = {
   updateSubscription: async (subscriptionId: string, status: string) => unwrap<{ subscription: Subscription }>(await api.patch(`/api/admin/subscriptions/${subscriptionId}/status`, { status })),
   donations: async () => unwrap<{ donations: Array<Record<string, unknown>> }>(await api.get('/api/admin/donations')),
   broadcast: async (payload: { subject: string; message: string }) => unwrap<{ result: unknown }>(await api.post('/api/admin/notifications/broadcast', payload)),
+};
+
+export const systemApi = {
+  ping: async () => unwrap<{ status: string; time: string }>(await api.get('/api/ping')),
 };

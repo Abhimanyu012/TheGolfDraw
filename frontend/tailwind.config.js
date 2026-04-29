@@ -15,8 +15,9 @@ export default {
         danger: 'rgb(var(--color-danger) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-        display: ['Playfair Display', 'DM Sans', 'Inter', 'ui-sans-serif', 'system-ui'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'ui-sans-serif', 'system-ui'],
+        display: ['Outfit', 'Plus Jakarta Sans', 'Inter', 'ui-sans-serif', 'system-ui'],
+        data: ['Space Grotesk', 'monospace'],
       },
       borderRadius: {
         xl2: '1.5rem',

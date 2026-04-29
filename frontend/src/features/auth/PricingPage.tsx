@@ -10,8 +10,8 @@ import { useAuthStore } from '@/lib/auth-store';
 import { useQueryClient } from '@tanstack/react-query';
 
 const plans = [
-  { id: 'MONTHLY', name: 'Monthly', price: 1999, accent: 'emerald', blurb: 'Flexible entry with monthly draw cadence.' },
-  { id: 'YEARLY', name: 'Yearly', price: 19999, accent: 'gold', blurb: 'Best value with longer participation runway.' },
+  { id: 'MONTHLY', name: 'Monthly', price: 19900, accent: 'emerald', blurb: 'Flexible. Cancel anytime. Full draw access every month.' },
+  { id: 'YEARLY', name: 'Yearly', price: 199900, accent: 'gold', blurb: 'Best value. Save ₹39/mo vs monthly billing.', savings: 'Save ₹39/mo' },
 ];
 
 type Plan = 'MONTHLY' | 'YEARLY';
@@ -165,12 +165,18 @@ export default function PricingPage() {
                     {plan.id === 'YEARLY' ? <BadgeCheck size={13} className="text-gold" /> : <Crown size={13} className="text-emerald" />}
                     {plan.id === 'YEARLY' ? 'Best Value' : 'Flexible Entry'}
                   </div>
+                  {(plan as any).savings && (
+                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald/30 bg-emerald/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald">
+                      <BadgeCheck size={11} />
+                      {(plan as any).savings}
+                    </div>
+                  )}
                   <div className="plan-name mt-4 text-emerald">{plan.name}</div>
                   <div className="mt-1 text-sm text-muted">{plan.blurb}</div>
                 </div>
                 <div className="text-right flex items-baseline gap-1 pt-4 justify-end">
-                  <span className="plan-currency">£</span>
-                  <span className="plan-price">{plan.price / 100}</span>
+                  <span className="plan-currency">₹</span>
+                  <span className="plan-price">{(plan.price / 100).toLocaleString('en-IN')}</span>
                   <span className="plan-period">/{plan.id === 'YEARLY' ? 'yr' : 'mo'}</span>
                 </div>
               </div>
