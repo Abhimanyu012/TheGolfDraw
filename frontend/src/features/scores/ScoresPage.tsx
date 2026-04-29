@@ -64,10 +64,8 @@ export default function ScoresPage() {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="relative space-y-6"
+      className="space-y-6"
     >
-      {/* Premium Material Background */}
-      <div className="material-bg" style={{ backgroundImage: 'url(/assets/bg-scores.png)' }} />
 
       <SectionHeading eyebrow="Score management" title="Track your last five scores" description="Values must stay between 1 and 45 and only one score can exist per date." />
       

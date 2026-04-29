@@ -69,10 +69,8 @@ export default function DashboardPage() {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="relative space-y-6"
+      className="space-y-6"
     >
-      {/* Premium Material Background */}
-      <div className="material-bg" style={{ backgroundImage: 'url(/assets/bg-dashboard.png)' }} />
 
       <SectionHeading eyebrow="Subscriber dashboard" title="Your membership, rewards, and giving in one place." description="Track subscription status, score history, draw eligibility, prize wins, and charity contribution with a calm SaaS layout." />
 

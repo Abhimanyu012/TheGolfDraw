@@ -44,6 +44,7 @@ export default function WinningsPage() {
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className="space-y-6"
     >
+
       <SectionHeading eyebrow="Winnings" title="Proof upload and payout status in one view" description="Members can review their wins, submit proof, and see payout progress without leaving the page." />
       
       {isLoading ? (
@@ -61,7 +62,7 @@ export default function WinningsPage() {
             ].map((item) => {
               const Icon = item.icon;
               return (
-                <Card key={item.label} className="flex items-center justify-between gap-3">
+                <Card key={item.label} className="material-card flex items-center justify-between gap-3">
                   <div>
                     <div className="text-xs uppercase tracking-[0.22em] text-muted">{item.label}</div>
                     <div className="mt-2 font-display text-2xl font-semibold text-text">{item.value}</div>
@@ -74,7 +75,7 @@ export default function WinningsPage() {
 
           <div className="grid gap-4">
             {winnings.map((winner) => (
-              <Card key={winner.id} className="space-y-3">
+              <Card key={winner.id} className="material-card space-y-3">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <div className="font-display text-xl font-semibold">{monthLabel(winner.draw?.month ?? 1, winner.draw?.year ?? new Date().getFullYear())}</div>

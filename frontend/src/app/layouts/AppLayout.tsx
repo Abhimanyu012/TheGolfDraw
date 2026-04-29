@@ -10,10 +10,10 @@ import { dashboardApi, scoreApi, winnerApi, subscriptionApi } from '@/lib/reques
 
 const userLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, prefetch: () => queryClient.prefetchQuery({ queryKey: ['dashboard', 'me'], queryFn: dashboardApi.user }) },
-  { to: '/subscription', label: 'Subscription', icon: CreditCard, prefetch: () => queryClient.prefetchQuery({ queryKey: ['subscription', 'me'], queryFn: subscriptionApi.get }) },
+  { to: '/subscription', label: 'Subscription', icon: CreditCard, prefetch: () => queryClient.prefetchQuery({ queryKey: ['subscription', 'me'], queryFn: subscriptionApi.me }) },
   { to: '/scores', label: 'Scores', icon: Target, prefetch: () => queryClient.prefetchQuery({ queryKey: ['scores'], queryFn: scoreApi.list }) },
   { to: '/draws', label: 'Draws', icon: Trophy },
-  { to: '/winnings', label: 'Winnings', icon: HandCoins, prefetch: () => queryClient.prefetchQuery({ queryKey: ['winnings'], queryFn: winnerApi.listMyWinnings }) },
+  { to: '/winnings', label: 'Winnings', icon: HandCoins, prefetch: () => queryClient.prefetchQuery({ queryKey: ['winnings'], queryFn: winnerApi.mine }) },
 ];
 
 const adminLinks = [

@@ -611,18 +611,6 @@ PAGE BY PAGE — TYPOGRAPHY RULES
 }
 
 /* ── PREMIUM MATERIAL SYSTEM ────────────────── */
-.material-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.12;
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-}
-
 .material-card {
   position: relative;
   overflow: hidden;
