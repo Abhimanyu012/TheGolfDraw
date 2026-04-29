@@ -12,7 +12,7 @@ const client = connectionString ? postgres(connectionString, {
   prepare: false, // needed for Supabase pooler
 }) : null;
 
-export const db = drizzle(client, { schema });
+export const db = client ? drizzle(client, { schema }) : null;
 
 export async function checkDB() {
   if (!client) return;

@@ -16,6 +16,10 @@ import paymentRoutes from "./routes/payment.routes.js";
 import { errorHandler, notFoundHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
+
+// Emergency Health Check for Vercel Debugging
+app.get("/api/ping", (req, res) => res.status(200).json({ status: "alive", time: new Date().toISOString() }));
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
