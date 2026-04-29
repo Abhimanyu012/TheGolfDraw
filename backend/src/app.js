@@ -20,23 +20,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://the-golf-draw.vercel.app",
-  "https://the-golf-draw-git-main-abhimanyukumars-projects.vercel.app",
-  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app",
-  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app/"
-];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin + "/") || origin.includes(".vercel.app")) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: true, // This will reflect the request origin back, allowing anything
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
