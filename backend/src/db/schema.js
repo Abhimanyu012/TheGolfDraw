@@ -219,13 +219,3 @@ export const winnerRelations = relations(winners, ({ one }) => ({
     relationName: "reviewedBy",
   }),
 }));
-
-export const schema = {
-  charities,
-  users,
-  scores,
-  subscriptions,
-  donations,
-  draws,
-  winners,
-};
