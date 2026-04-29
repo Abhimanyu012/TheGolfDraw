@@ -2,10 +2,18 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 
-const uploadsDir = path.resolve(process.cwd(), "uploads/proofs");
+const isVercel = process.env.VERCEL === '1' || !!process.env.VERCEL_URL;
+// On Vercel, the only writable directory is /tmp
+const uploadsDir = isVercel 
+  ? path.join('/tmp', 'uploads', 'proofs') 
+  : path.resolve(process.cwd(), "uploads/proofs");
 
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (error) {
+  console.warn("Could not create uploads directory (expected on Vercel):", error.message);
 }
 
 const storage = multer.diskStorage({
