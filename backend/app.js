@@ -3,17 +3,17 @@ import cors from "cors";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRoutes from "./routes/auth.routes.js";
-import subscriptionRoutes from "./routes/subscription.routes.js";
-import scoreRoutes from "./routes/score.routes.js";
-import charityRoutes from "./routes/charity.routes.js";
-import drawRoutes from "./routes/draw.routes.js";
-import winnerRoutes from "./routes/winner.routes.js";
-import dashboardRoutes from "./routes/dashboard.routes.js";
-import donationRoutes from "./routes/donation.routes.js";
-import adminRoutes from "./routes/admin.routes.js";
-import paymentRoutes from "./routes/payment.routes.js";
-import { errorHandler, notFoundHandler } from "./middlewares/error.middleware.js";
+import authRoutes from "./src/routes/auth.routes.js";
+import subscriptionRoutes from "./src/routes/subscription.routes.js";
+import scoreRoutes from "./src/routes/score.routes.js";
+import charityRoutes from "./src/routes/charity.routes.js";
+import drawRoutes from "./src/routes/draw.routes.js";
+import winnerRoutes from "./src/routes/winner.routes.js";
+import dashboardRoutes from "./src/routes/dashboard.routes.js";
+import donationRoutes from "./src/routes/donation.routes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
+import paymentRoutes from "./src/routes/payment.routes.js";
+import { errorHandler, notFoundHandler } from "./src/middlewares/error.middleware.js";
 
 const app = express();
 
@@ -24,26 +24,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://the-golf-draw.vercel.app",
-  "https://the-golf-draw-git-main-abhimanyukumars-projects.vercel.app",
-  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app",
-  "https://the-golf-draw-gjqv2zom2-abhimanyukumars-projects.vercel.app/"
-];
-
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin + "/") || origin.includes(".vercel.app")) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+      const isAllowed = !origin || origin.includes("localhost") || origin.includes("vercel.app");
+      callback(isAllowed ? null : new Error("Not allowed by CORS"), isAllowed);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   }),
 );
 app.use(express.json());
@@ -51,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 // Static files handling for Vercel
-const uploadsPath = path.resolve(__dirname, "../uploads");
+const uploadsPath = path.resolve(__dirname, "uploads");
 app.use("/uploads", express.static(uploadsPath));
 
 // Routes
