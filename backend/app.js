@@ -26,13 +26,10 @@ const __dirname = path.dirname(__filename);
 // Middleware
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const isAllowed = !origin || origin.includes("localhost") || origin.includes("vercel.app");
-      callback(isAllowed ? null : new Error("Not allowed by CORS"), isAllowed);
-    },
+    origin: (origin, callback) => callback(null, true),
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   }),
 );
 app.use(express.json());
