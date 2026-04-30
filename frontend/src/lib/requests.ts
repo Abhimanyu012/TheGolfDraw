@@ -85,6 +85,7 @@ export const adminApi = {
   updateSubscription: async (subscriptionId: string, status: string) => unwrap<{ subscription: Subscription }>(await api.patch(`/api/admin/subscriptions/${subscriptionId}/status`, { status })),
   donations: async () => unwrap<{ donations: Array<Record<string, unknown>> }>(await api.get('/api/admin/donations')),
   broadcast: async (payload: { subject: string; message: string }) => unwrap<{ result: unknown }>(await api.post('/api/admin/notifications/broadcast', payload)),
+  activityLogs: async () => unwrap<{ logs: Array<{ id: string; type: string; user: string; date: string; detail: string }> }>(await api.get('/api/admin/activity')),
 };
 
 export const systemApi = {

@@ -191,12 +191,12 @@ export default function SubscriptionPage() {
     <div className="space-y-8">
       {/* ── header ── */}
       <SectionHeading
-        eyebrow="Subscription"
-        title={isActive ? 'Your membership is active' : 'Choose your membership'}
+        eyebrow="Membership"
+        title={isActive ? 'Active Membership Tier' : 'Choose Your Access Tier'}
         description={
           isActive
-            ? 'Manage your plan or view billing details below.'
-            : 'Unlock the dashboard, monthly draws, and charity impact tracking.'
+            ? 'Manage your membership cycle, billing preferences, and exclusive club privileges.'
+            : 'Unlock the dashboard, performance tracking, and verified charity impact.'
         }
       />
 

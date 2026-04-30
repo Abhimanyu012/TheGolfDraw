@@ -40,9 +40,9 @@ export default function CharitiesPage() {
       className="page-shell py-16"
     >
       <SectionHeading
-        eyebrow="Charity selection"
-        title="Choose the cause your membership supports"
-        description="Featured charities surface first, with a clean discovery flow that makes the impact side of the product feel immediate."
+        eyebrow="Impact selection"
+        title="Align with a Purpose"
+        description="Select the cause your membership supports. Our Impact Partners are globally verified for transparency and measurable sustainable change."
       />
       <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
         <div className="relative max-w-lg">

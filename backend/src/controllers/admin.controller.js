@@ -214,3 +214,23 @@ export const broadcastSystemUpdate = asyncHandler(async (req, res) => {
 
   res.json({ success: true, result });
 });
+
+export const getActivityLogs = asyncHandler(async (req, res) => {
+  const [recentUsers, recentSubs, recentScores, recentWinners, recentDonations] = await Promise.all([
+    db.select().from(users).orderBy(desc(users.createdAt)).limit(10),
+    db.select({ sub: subscriptions, user: users }).from(subscriptions).leftJoin(users, eq(subscriptions.userId, users.id)).orderBy(desc(subscriptions.createdAt)).limit(10),
+    db.select({ score: scores, user: users }).from(scores).leftJoin(users, eq(scores.userId, users.id)).orderBy(desc(scores.createdAt)).limit(10),
+    db.select({ winner: winners, user: users }).from(winners).leftJoin(users, eq(winners.userId, users.id)).where(or(eq(winners.verificationStatus, 'PENDING'), eq(winners.verificationStatus, 'APPROVED'))).orderBy(desc(winners.updatedAt)).limit(10),
+    db.select({ donation: donations, user: users, charity: charities }).from(donations).leftJoin(users, eq(donations.userId, users.id)).leftJoin(charities, eq(donations.charityId, charities.id)).orderBy(desc(donations.createdAt)).limit(10),
+  ]);
+
+  const logs = [
+    ...recentUsers.map(u => ({ id: `u-${u.id}`, type: 'MEMBER_JOINED', user: u.fullName, date: u.createdAt, detail: 'New account registered' })),
+    ...recentSubs.map(s => ({ id: `s-${s.sub.id}`, type: 'SUBSCRIPTION_CREATED', user: s.user?.fullName, date: s.sub.createdAt, detail: `Activated ${s.sub.plan} tier` })),
+    ...recentScores.map(s => ({ id: `sc-${s.score.id}`, type: 'SCORE_SUBMITTED', user: s.user?.fullName, date: s.score.createdAt, detail: `Logged a score of ${s.score.value}` })),
+    ...recentWinners.map(w => ({ id: `w-${w.winner.id}`, type: 'WINNER_PROOFS', user: w.user?.fullName, date: w.winner.updatedAt, detail: `Uploaded prize verification proof` })),
+    ...recentDonations.map(d => ({ id: `d-${d.donation.id}`, type: 'DONATION_RECORDED', user: d.user?.fullName, date: d.donation.createdAt, detail: `Contributed to ${d.charity?.name}` })),
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 20);
+
+  res.json({ success: true, logs });
+});

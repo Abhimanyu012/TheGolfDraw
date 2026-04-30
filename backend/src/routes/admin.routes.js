@@ -8,6 +8,7 @@ import {
   updateSubscriptionStatus,
   updateUser,
   updateUserScore,
+  getActivityLogs,
 } from "../controllers/admin.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 import { requireRole } from "../middlewares/role.middleware.js";
@@ -23,6 +24,7 @@ router.patch("/users/:userId/scores/:scoreId", updateUserScore);
 router.get("/subscriptions", listSubscriptions);
 router.patch("/subscriptions/:subscriptionId/status", updateSubscriptionStatus);
 router.get("/donations", listDonations);
+router.get("/activity", getActivityLogs);
 router.post("/notifications/broadcast", broadcastSystemUpdate);
 
 export default router;

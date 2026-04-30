@@ -164,9 +164,9 @@ export default function WinningsPage() {
       className="space-y-6"
     >
       <SectionHeading
-        eyebrow="Winnings"
-        title="Your prize history & payouts"
-        description="Your prize history, proof submissions, and payout updates — all in one place."
+        eyebrow="Rewards"
+        title="Prize History & Verification"
+        description="A transparent record of your success. Track verified rewards, manage proof submissions, and monitor disbursement status."
       />
 
       {isLoading ? (

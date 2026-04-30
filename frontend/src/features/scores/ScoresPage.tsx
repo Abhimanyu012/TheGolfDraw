@@ -76,7 +76,7 @@ export default function ScoresPage() {
       className="space-y-6"
     >
 
-      <SectionHeading eyebrow="Score management" title="Track your last five scores" description="Values must stay between 1 and 45 and only one score can exist per date." />
+      <SectionHeading eyebrow="Score management" title="Performance Tracking" description="Your eligibility is maintained through consistent performance logging. Values are verified against official Stableford standards (1-45)." />
       
       <div className="grid gap-6 xl:grid-cols-[400px_1fr]">
         {/* ADD SCORE CARD / GATING */}

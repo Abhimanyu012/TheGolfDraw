@@ -9,16 +9,16 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { GolfMotionBackground } from '@/features/home/GolfMotionBackground';
 import { useSession } from '@/app/providers';
 
-const heroBg = 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=1920&q=80'; // Moody dusk landscape
-const charityBg = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&q=80'; // Ethical community impact
-const winnersBg = 'https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?w=1920&q=80'; // Abstract gold achievement
-const textureBg = 'https://images.unsplash.com/photo-1550747540-3dffba27252f?w=1920&q=80'; // Deep green macro texture
-const subscriptionBg = 'https://images.unsplash.com/photo-1518005020251-582c789765c7?w=1920&q=80'; // Minimalist luxury architecture
+const heroBg = '/hero-bg.png'; // High-impact custom luxury visual
+const charityBg = 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1920&q=80'; // Emotional community connection
+const winnersBg = 'https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?w=1920&q=80'; // Minimalist gold achievement
+const textureBg = 'https://images.unsplash.com/photo-1550747540-3dffba27252f?w=1920&q=80'; // Deep emerald velvet texture
+const subscriptionBg = 'https://images.unsplash.com/photo-1518005020251-582c789765c7?w=1920&q=80'; // Precision luxury architecture
 
 const steps = [
-  { id: '01', title: 'Subscribe', body: 'Choose a plan and activate your The Golf Draw membership instantly.', icon: Crown },
-  { id: '02', title: 'Enter Scores', body: 'Track your five latest scores and keep eligibility visible at all times.', icon: BarChart3 },
-  { id: '03', title: 'Win & Give', body: 'Join monthly prize draws while your subscription supports verified charities.', icon: HeartHandshake },
+  { id: '01', title: 'Curated Membership', body: 'Select a plan that aligns with your ambition and activate your private club access.', icon: Crown },
+  { id: '02', title: 'Performance Tracking', body: 'Log your latest five scores within our secure dashboard to maintain draw eligibility.', icon: BarChart3 },
+  { id: '03', title: 'Purposeful Winning', body: 'Enter the monthly prize pool while your subscription funds verified, high-impact charities.', icon: HeartHandshake },
 ];
 
 const charities = [
@@ -172,15 +172,15 @@ export default function LandingPage() {
           </h1>
 
           <p className="hero-sub mt-8">
-            The world's first subscription platform where your <span style={{color: '#4CAF7A', fontWeight: 600}}>golf scores</span> fund <span style={{color: '#C87941', fontWeight: 600}}>charity</span> and enter you into monthly <span style={{color: '#D4AF37', fontWeight: 600}}>prize draws</span>.
+            The intersection of <span style={{color: '#4CAF7A', fontWeight: 600}}>performance</span> and <span style={{color: '#C87941', fontWeight: 600}}>purpose</span>. A private membership where your scores fund global impact and unlock exclusive rewards.
           </p>
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button as={NavLink} to="/signup">
-              Subscribe Now <ArrowRight size={16} />
+              Activate Membership <ArrowRight size={16} />
             </Button>
             <Button as={NavLink} to="/pricing" variant="secondary">
-              See How It Works <ChevronRight size={16} />
+              View the Experience <ChevronRight size={16} />
             </Button>
           </motion.div>
 
@@ -199,8 +199,8 @@ export default function LandingPage() {
         <div className="relative z-10">
           <SectionHeading
             eyebrow="The Workflow"
-            title="Simple. Ethical. Rewarding."
-            description="We've distilled the complex world of charitable giving and prize draws into a seamless membership experience."
+            title="Precision. Purpose. Participation."
+            description="We've elevated the model of charitable giving into a seamless, high-performance membership experience."
           />
           <div className="mt-12 grid gap-12 lg:grid-cols-3">
             {steps.map((step) => {
@@ -246,7 +246,7 @@ export default function LandingPage() {
                 <h2 className="mt-4 jackpot-amount">₹4,52,000</h2>
               </motion.div>
               <p className="section-desc mt-6">
-                Active members are automatically entered into our tiered prize structure, including the Jackpot, 4-Match, and 3-Match pools.
+                Members are automatically entered into our tiered prize architecture, featuring the Jackpot, 4-Match, and 3-Match pools.
               </p>
               <div className="mt-10 flex flex-wrap gap-4">
                 <Button as={NavLink} to="/draws" className="min-w-[200px] justify-between h-14 bg-gold text-black hover:bg-gold/90 border-none">
@@ -302,8 +302,8 @@ export default function LandingPage() {
               <div>
                 <SectionHeading
                   eyebrow="Global Impact"
-                  title="Transparent, Verified, Meaningful."
-                  description="We partner with world-class charities to ensure every penny from your subscription creates measurable positive change."
+                  title="The Philanthropy of Precision."
+                  description="We partner with verified Impact Partners to ensure every membership contribution creates measurable, sustainable change."
                 />
               </div>
               <div className="grid grid-cols-3 gap-8 border-l border-white/10 pl-8">
