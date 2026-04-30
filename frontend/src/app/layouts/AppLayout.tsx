@@ -21,7 +21,7 @@ const userLinks = [
 ];
 
 const adminLinks = [
-  { to: '/admin', label: 'Intelligence', icon: Shield, prefetch: () => queryClient.prefetchQuery({ queryKey: ['dashboard', 'admin'], queryFn: adminApi.admin }) },
+  { to: '/admin', label: 'Intelligence', icon: Shield, prefetch: () => queryClient.prefetchQuery({ queryKey: ['dashboard', 'admin'], queryFn: dashboardApi.admin }) },
   { to: '/admin/users', label: 'Members', icon: Users },
   { to: '/admin/subscriptions', label: 'Revenue', icon: CreditCard },
   { to: '/admin/draws', label: 'Simulate', icon: Trophy },
